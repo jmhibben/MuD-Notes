@@ -1,5 +1,5 @@
 # MuD Notes
-An Electron-powered, CommonMark-based note-taking app.
+An Electron-powered, CommonMarkl-based note-taking app.
 
 
 ## Using MuD Notes
