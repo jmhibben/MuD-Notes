@@ -4,51 +4,50 @@
   <head>
     <title>Index - MuD Notes</title>
     <link rel="stylesheet" href="css/master.css" charset="utf-8">
+    <script>
+      var ipc = require('ipc');
+      function request()
+      {
+        var path = window.location.href;
+        // strip file:// from path
+        path = path.substring(7);
+        // document.write(path); // debug
+        var fileSplit = path.indexOf("?");
+        // document.write(fileSplit); // debug
+        var file = '';
+        if (fileSplit==-1)
+        {
+          file = 'test/todo.md';
+        }
+        else
+        {
+          file = path.substring(fileSplit+1);
+        }
+        // document.write(file); // debug
+        var pathSplit = path.indexOf("src");
+        path = path.substring(0, pathSplit);
+        // document.write(path); // debug
+        var argInfo = {
+          'message':  'load',
+          'path':     path,
+          'file':     file
+        };
+        document.write(arg); // debug
+        ipc.send('asyncronous-message', argInfo);
+      }
+
+      ipc.on('asynchronous-reply', function(arg)
+      {
+        // document.write(arg['message']); // debug
+        if(arg['message']=='load')
+        {
+        }
+      });
+    </script>
   </head>
-  <body>
-    <h1>Welcome to MuD Notes!</h1><hr />
-    Your self-contained, Electron-powered, markdown-based note-taking app.<br />
-    Current URL: <script>document.write(document.location.href)</script><br />
-    <p>Todo list for this project:
-    <ul>
-      <li>Check Atom source code for Markdown previewre code; may be able to
-      utilize it for MuD Notes to process MD source to valid X/HTML code</li>
-      <li>Editor need to be designed to highlight MD &amp; check for validity
-      (e.g., no missing or misplaced tags); warn user, but stlil allow save in
-      case they're unable to fix the issues immediately</li>
-      <li>Automatically update preview pane with option to lock scroll of both
-      panes together</li>
-      <li>Preview pane should be toggleable</li>
-      <li>Help file(s) with MD tips &amp; syntax</li>
-      <li>
-        Allow user to pick syntax (e.g., original, Github, CommonMark, etc)
-        <ul>
-          <li>Start with either Github or <b>CommonMark</b>, then expand</li>
-        </ul>
-      </li>
-      <li>About page should contain info on MuD Notes, Electron, &amp; other
-      dependencies, including links to relevant project pages and/or source code
-      (when available)</li>
-      <li>
-        Readme should note that Electron will (currently) need to be installed
-        manually to run; include instructions on how to run project as-is
-        <ul>
-          <li>Eventually, Electron needs to be packed with it &amp; the other
-          dependencies so it can be run as a self-contained program</li>
-          <li>
-            Will likely need to pack Linux, Windows &amp; Mac versions separately
-            here due to potentially different file structures
-            <ul>
-              <li>Will need Mac tester(s); ask around Comp. Sci. department
-              &amp; make note of this on Github once it gets to this point</li>
-            </ul>
-          </li>
-          <li>Platform-dependent installs (versions packed with Electron) may
-          need to be kept in their own repositories</li>
-        </ul>
-      </li>
-      <li>MD parsers should (ideally) be in JS... or at least be something that
-      can be run (read: executed) through Node.js</li>
-    </ul></p>
+  <body onload="request()">
+    <div id="md-viewer">
+
+    </div>
   </body>
 </html>

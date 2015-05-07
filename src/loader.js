@@ -1,19 +1,9 @@
 // get required bits
 var app = require('app');
 var browserWindow = require('browser-window');
-// make an array containing all plugins to be used with markdown-it
-var mdPlugins = [
-  'markdown-it-abbr',
-  'markdown-it-container',
-  'markdown-it-deflist',
-  'markdown-it-emoji', // may decide to remove this one
-  'markdown-it-footnote',
-  'markdown-it-for-inline',
-  'markdown-it-ins',
-  'markdown-it-mark',
-  'markdown-it-sub',
-  'markdown-it-sup'
-];
+var ipc = require('ipc');
+// access to filesystem through node.js
+// var fs = require('fs');
 // markdown-it's plugin loader expects objects built from plugins via require()
 var md = require('markdown-it')('commonmark')
         .use(require('markdown-it-abbr'))
@@ -25,10 +15,37 @@ var md = require('markdown-it')('commonmark')
         .use(require('markdown-it-mark'))
         .use(require('markdown-it-sub'))
         .use(require('markdown-it-sup'));
+
 // crash reporting
 require('crash-reporter').start();
 
 var mainWindow = null;
+
+function getFileContents(path)
+{
+  var buf = fs.readFile(path);
+  return buf.toString();
+}
+
+/* The next "function" expects "arg" to be an object of the following format:
+ * 'message'  : Contains info on what needs to be done
+ * 'path'     : filesystem path to the default directory  NOTE: need to set the default path later
+ * 'file'     : The file location (relative to 'path')
+ * 'content'  : The contents of any file to be read/written
+ *
+ * More properties will be added as necessary
+ */
+ipc.on('asynchronous-message', function(event, arg)
+{
+  console.log(arg);
+  var content='';
+  if(arg['message'] == 'load')
+  {
+    content = getFileContents(path+file);
+  }
+  var ret = {'message': 'load', 'content': content};
+  event.sender.send('asynchronous-reply', ret);
+});
 
 // quit when all windows are closed
 app.on('window-all-closed', function()
