@@ -32,8 +32,8 @@
           'path':     path,
           'file':     file
         };
-        document.write(arg); // debug
-        ipc.send('asyncronous-message', argInfo);
+        // document.write(argInfo['message']); // debug
+        ipc.send('asynchronous-message', argInfo);
       }
 
       ipc.on('asynchronous-reply', function(arg)
@@ -41,6 +41,7 @@
         // document.write(arg['message']); // debug
         if(arg['message']=='load')
         {
+          document.write(arg['content']);
         }
       });
     </script>
